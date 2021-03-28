@@ -1,7 +1,7 @@
 use std::io::prelude::*;
 use std::net:: TcpStream;
 use std::thread;
-use std::process;
+
 
 pub mod messenger;
 
@@ -13,21 +13,12 @@ fn main() {
     fn connect(mut stream: &TcpStream)-> std::io::Result<()> {
         let message = "greetings from rust client";
         stream.write(message.as_bytes())?;
-        let mut rstream = stream.try_clone().unwrap();
-        thread::spawn(move ||{ 
-            let mut client_buffer = [0; 2048];           
+        let rstream = stream.try_clone().unwrap();
+        thread::spawn(move ||{            
              loop {
-                 match rstream.read(&mut client_buffer) {
-                    Ok(n) => {
-                        if n == 0 {
-                            process::exit(0);
-                        }
-                        messenger::read_message(&rstream).expect("connection interrupted");
-                    }
-                    Err(error)=> println!("{}",error),
-                 }
-             }
-        });
+                    messenger::read_message(&rstream).expect("connection interrupted");
+                }
+            });
         Ok(())
         
     }

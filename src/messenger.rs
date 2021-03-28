@@ -1,10 +1,7 @@
 use std::io;
 use std::io::prelude::*;
 use std::net::TcpStream;
-
-//pub struct Message {
-//    content: String,
-//}
+use std::process;
 
 pub fn send_message(mut stream: &TcpStream) {
     
@@ -17,7 +14,12 @@ pub fn send_message(mut stream: &TcpStream) {
 pub fn read_message(mut stream: &TcpStream)-> std::io::Result<()> {
     let mut buffer = [0; 2048];
     stream.read(&mut buffer).expect("connection interrupted");
-    println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
+
+    if buffer == [0;2048] {
+        process::exit(0);
+    } else{
+        println!("Request: {}", String::from_utf8_lossy(&buffer[..]));
+    }
+                     
     Ok(())
-              
 }
