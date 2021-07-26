@@ -1,4 +1,3 @@
-use std::io::prelude::*;
 use std::net:: TcpStream;
 use std::thread;
 use std::env;
@@ -19,9 +18,7 @@ fn main() {
     let stream = TcpStream::connect(ip)
     .expect("Couldn't connect to the server...");
 
-    fn connect(mut stream: &TcpStream)-> std::io::Result<()> {
-        let message = "greetings from rust client";
-        stream.write(message.as_bytes())?;
+    fn connect(stream: &TcpStream)-> std::io::Result<()> {
         let rstream = stream.try_clone().unwrap();
         thread::spawn(move ||{            
              loop {
